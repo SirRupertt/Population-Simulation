@@ -27,9 +27,10 @@ class City():
         
         #Negative change
         if(self.popchange < 0):
-            for i in range(abs(self.popchange)):
-                self.x =np.delete(self.x, -1, 0)
-                self.y = np.delete(self.y, -1, 0)
+            if(self.pop > abs(self.popchange)):
+                for i in range(abs(self.popchange)):
+                    self.x =np.delete(self.x, -1, 0)
+                    self.y = np.delete(self.y, -1, 0)
                 
         #Will need a replot in main
         

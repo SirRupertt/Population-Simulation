@@ -10,7 +10,7 @@ fig, ax = plt.subplots()
 #Check for start button
 def setup():
     #Making sure variables apply everywhere
-    global running, cities, x, y, widgets, fig, ax
+    global running, cities, x, y, widgets, fig, ax, axcbar
     running = True
     x = np.array([])
     y = np.array([])
@@ -23,15 +23,14 @@ def setup():
     axstop = fig.add_axes([0.81, 0.05, 0.1, 0.075])
     axbirth = fig.add_axes([0.3, 0.07, 0.2, 0.075])
     axdeath = fig.add_axes([0.3, 0.02, 0.2, 0.075])
+    axcbar = fig.add_axes([0.93,0.2, 0.05, 0.65])
     ax.set(xlim=(-10,10), ylim=(-10,10))
     ax.set_title('Simulation Simulation')
     
     #Create first city
     city1 = City.City()
-    print("CITY1")
-    print(city1.x)
-    x= np.append(x, city1.getX())
-    y =np.append(y, city1.getY())
+    x= np.append(x, city1.x)
+    y =np.append(y, city1.y)
     cities.append(city1)
     
     #Create widgets (These stay static but values accessed many times)
@@ -44,17 +43,18 @@ def setup():
     widgets = [startButton, startButton, birthRateSlider, deathRateSlider]
 
     startButton.on_clicked(run)
-    plt.ion()
-    plt.show(block=False)
-    plt.pause(3) #Need to change to wait for button presses
-    #stopClick = stopButton.on_clicked(kill)
+    stopButton.on_clicked(kill)
+    #plt.ion()
+    plt.show(block=True)
+    #plt.pause(3) #Need to change to wait for button presses
+    
     
 def run(event): #Main running starts
-    global fig, ax, x, y
+    global fig, ax, x, y, running, axcbar
     #Check if quit
     print('RUN')
     iter=0
-    while iter <2:
+    while running:
         iter+=1
         print(iter)
     #Ploting 
@@ -62,10 +62,10 @@ def run(event): #Main running starts
         ax.clear()
         
         #Get Data and plot
-        #fig1,ax1 = plt.subplots()
-        kde = sns.kdeplot(data=[x,y], x=x, y=y, fill=True, cmap='flare', ax=ax)
+        ax.set_title('Simulation Simulation')
+        kde = sns.kdeplot(x=x, y=y, fill=True, cmap='flare', ax=ax, cbar=True, cbar_ax=axcbar)
         plt.show()
-        plt.pause(3)
+        plt.pause(0.5)
         
         #Display
         #plt.show()
@@ -73,6 +73,8 @@ def run(event): #Main running starts
         plt.draw()
         
     #Update
+        x = np.array([])
+        y = np.array([])
         #each city update
         for city in cities:
             #Grab widget values and send into
@@ -84,13 +86,17 @@ def run(event): #Main running starts
             y= np.append(y, city.y)
             
     #Sleep 1.5s
-        time.sleep(1.5)
+        time.sleep(0.5)
+        
+    if not running:
+        return()
 
-def kill():
+def kill(event):
     print("KILL")
     global running
     running = False
     plt.close()
+    return()
 
 #run setup
 setup()
