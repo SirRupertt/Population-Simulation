@@ -6,18 +6,19 @@ import matplotlib.widgets as widgets
 import seaborn as sns
 import time
 
+#Create figure and axis
 fig, ax = plt.subplots()
 #Check for start button
 def setup():
     #Making sure variables apply everywhere
     global running, cities, x, y, widgets, fig, ax, axcbar
     running = True
+    #Creating placeholder variables to add to later
     x = np.array([])
     y = np.array([])
     cities = []
     
-    #Create figure and axis
-    #fig, ax = plt.subplots()
+    #Adjusting figure where sliders, labels, graph is, ect.
     fig.subplots_adjust(bottom=0.2)
     axstart = fig.add_axes([0.7, 0.05, 0.1, 0.075])
     axstop = fig.add_axes([0.81, 0.05, 0.1, 0.075])
@@ -29,6 +30,7 @@ def setup():
     
     #Create first city
     city1 = City.City()
+    #add city pop to global arrays
     x= np.append(x, city1.x)
     y =np.append(y, city1.y)
     cities.append(city1)
@@ -44,15 +46,15 @@ def setup():
 
     startButton.on_clicked(run)
     stopButton.on_clicked(kill)
-    #plt.ion()
     plt.show(block=True)
-    #plt.pause(3) #Need to change to wait for button presses
+    #Need to change to wait for button presses
     
     
 def run(event): #Main running starts
     global fig, ax, x, y, running, axcbar
     #Check if quit
     print('RUN')
+    #Count variable for what iteration
     iter=0
     while running:
         iter+=1
@@ -65,11 +67,9 @@ def run(event): #Main running starts
         ax.set_title('Simulation Simulation')
         kde = sns.kdeplot(x=x, y=y, fill=True, cmap='flare', ax=ax, cbar=True, cbar_ax=axcbar)
         plt.show()
-        plt.pause(0.5)
+        plt.pause(0.5) #Pause so can be seen
         
         #Display
-        #plt.show()
-        #fig.canvas.draw_idle()
         plt.draw()
         
     #Update
@@ -87,10 +87,12 @@ def run(event): #Main running starts
             
     #Sleep 1.5s
         time.sleep(0.5)
-        
+    
+    #If stop button pressed, exit function
     if not running:
         return()
 
+#Stop button command that stops main loop and closes figure
 def kill(event):
     print("KILL")
     global running
