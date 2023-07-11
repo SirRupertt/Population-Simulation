@@ -15,7 +15,6 @@ class City():
         print("Updating")
         self.popchange = widgets.get('BR') - widgets.get('DR')
         self.pop += self.popchange
-       # print(self.pop)
         
         #Positive Change 
         if self.popchange >= 0:
@@ -30,13 +29,4 @@ class City():
             if(self.pop > abs(self.popchange)):
                 for i in range(abs(self.popchange)):
                     self.x =np.delete(self.x, -1, 0)
-                    self.y = np.delete(self.y, -1, 0)
-                
-        #Will need a replot in main
-        
-    
-    def getX(self):
-        return(self.x)
-    
-    def getY(self):
-        return(self.y)
+                    self.y = np.delete(self.y, -1, 0)   
