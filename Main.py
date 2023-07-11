@@ -11,7 +11,7 @@ fig, ax = plt.subplots()
 #Check for start button
 def setup():
     #Making sure variables apply everywhere
-    global running, cities, x, y, widgets, fig, ax, axcbar
+    global running, cities, x, y, widgets, fig, ax, axcbar, citycount
     running = True
     #Creating placeholder variables to add to later
     x = np.array([])
@@ -29,10 +29,11 @@ def setup():
     ax.set_title('Simulation Simulation')
     
     #Create first city
-    city1 = City.City()
+    citycount = 1
+    city1 = City.City([-10,10])
     #add city pop to global arrays
-    x= np.append(x, city1.x)
-    y =np.append(y, city1.y)
+    x= np.append(x, city1.df.loc[:,"x"])
+    y =np.append(y, city1.df.loc[:,"y"])
     cities.append(city1)
     
     #Create widgets (These stay static but values accessed many times)
@@ -51,7 +52,7 @@ def setup():
     
     
 def run(event): #Main running starts
-    global fig, ax, x, y, running, axcbar
+    global fig, ax, x, y, running, axcbar, citycount
     #Check if quit
     print('RUN')
     #Count variable for what iteration
@@ -75,6 +76,16 @@ def run(event): #Main running starts
     #Update
         x = np.array([])
         y = np.array([])
+        
+        #If iterator is multiple of 5 add another city (TEMP)
+        if(iter%5 ==0):
+            citycount+=1
+            #NEED DICTIONARY IF WANT UNIQUE NAMES
+            cityname = "city" + str(citycount)
+            cityname = City.City([10, 20])
+            cities.append(cityname)
+            
+        
         #each city update
         for city in cities:
             #Grab widget values and send into
@@ -82,8 +93,8 @@ def run(event): #Main running starts
             DRVal = deathRateSlider.val
             city.update({'BR' : BRVal, 'DR': DRVal})
             #Create updated x,y 
-            x= np.append(x, city.x)
-            y= np.append(y, city.y)
+            x= np.append(x, city.df.loc[:,"x"])
+            y =np.append(y, city.df.loc[:,"y"])
             
     #Sleep 1.5s
         time.sleep(0.5)
