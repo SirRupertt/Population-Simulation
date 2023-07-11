@@ -19,8 +19,14 @@ class City():
         self.popchange = widgets.get('BR') - widgets.get('DR')
         self.pop += self.popchange
         
-        self.x, self.y = make_blobs(n_samples=self.pop, centers=[self.loc], n_features=2)
-        self.df = DataFrame(dict(x=self.x[:,0], y=self.x[:,1], label=self.y))
+        if(self.pop>0):
+            self.x, self.y = make_blobs(n_samples=self.pop, centers=[self.loc], n_features=2)
+            self.df = DataFrame(dict(x=self.x[:,0], y=self.x[:,1], label=self.y))
+        else:
+            self.pop=0
+            self.x, self.y = make_blobs(n_samples=0, centers=[self.loc], n_features=2)
+            self.df = DataFrame(dict(x=self.x[:,0], y=self.x[:,1], label=self.y))
+            
         #Positive Change 
         #if self.popchange >= 0:
         #    ix = np.random.standard_normal(self.popchange) 
